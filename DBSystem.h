@@ -21,7 +21,8 @@ class DBSystem
         string path;
         vector < string > tables;
         map < string, vector < pair < string, string > > > attributes;
-        void ParseCSV(string csvFilePath);
+        
+        vector< vector<string> > ParseCSV(string csvFilePath);
 
     public:
         void readConfig(string str);
