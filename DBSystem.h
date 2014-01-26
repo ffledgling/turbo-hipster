@@ -20,8 +20,8 @@ class Page
     private:
         //meta info of the table
         string tablename;
-        LL start_index;
-        LL end_index;
+        int start_index;
+        int end_index;
 
         //vector of the records.
         vector< vector < string > > records;
@@ -65,6 +65,7 @@ class Page
                     tmp_row.push_back(temp);
                 }
                 records.push_back(tmp_row);
+                end_index++;
             }
             return true;
         }
@@ -100,6 +101,15 @@ class Page
         //will return the entire record in a vector.
         vector<string> get_record(LL record_id)
         {
+            vector<string> row;
+
+            if(record_id >= start_index && record_id <= end_index)
+            {
+                int idx = record_id - start_index;
+                row = records[idx];
+            }
+
+            return row;
         }
 
         //will return -1 on failure. Else index where new record is stored.
