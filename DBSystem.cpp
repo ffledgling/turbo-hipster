@@ -102,13 +102,22 @@ void DBSystem::populateDBInfo()
 
         int record_count = 0;
         vector<PageFileInfo> pagefiles;
+        // print table name
         cout << *v << endl;
 
         Page temp;
+        PageFileInfo pfi;
+
+        temp.generate_page(*v, record_count);
         for(t=table.begin(); t!=table.end(); t++){
-            temp.generate_page(*v, record_count);
-            while(temp.insert_record(*t, page_size)!=-1){
+            
+            if(temp.insert_record(*t, page_size)!=-1){
                 record_count++;
+            } else {
+                temp.write_page_file(*v + "_page_file.csv");
+                record_count++;
+                temp.generate_page(*v, record_count);
+                temp.insert_record(*t, page_size);
             }
         }
 

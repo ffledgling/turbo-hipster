@@ -9,11 +9,3 @@ CODE, String
 NAME, String
 CONTINENT, String
 END
-
-BEGIN
-sex
-ID, int
-CODE, String
-NAME, String
-CONTINENT, String
-END
