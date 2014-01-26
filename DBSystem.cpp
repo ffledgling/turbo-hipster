@@ -187,9 +187,10 @@ int main()
     DBSystem data;
     data.readConfig("config.txt");
     data.initMainMemory();
-    // data.populateDBInfo();
+    data.populateDBInfo();
 
     Page temp;
     temp.read_page_file("countries.csv");
+    temp.write_page_file("out.csv");
     return 0;
 }

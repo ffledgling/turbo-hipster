@@ -73,6 +73,28 @@ class Page
         //will return 1 on success and 0 othereise.
         bool write_page_file(string path_to_pagefile)
         {
+            ofstream outfile;
+            //read config file
+            outfile.open(path_to_pagefile.c_str());
+            //abort if config file can't be opened
+            if(!outfile.is_open())
+            {
+                perror("Error while opening file...\nAborting!!");
+                return false;
+            }
+
+            for(int i=0; i<records.size(); i++)
+            {
+                for(int j=0; j<records[i].size(); j++)
+                {
+                    if(j!=0)
+                        cout << ",";
+                    cout << records[i][j];
+                }
+                cout << "\n";
+            }
+
+            return true;
         }
 
         //will return the entire record in a vector.
