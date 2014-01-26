@@ -90,7 +90,7 @@ void DBSystem::populateDBInfo()
     vector<string>::iterator v;
     vector< pair <string, string> >::iterator r;
     vector< vector <string> > table;
-    vector< vector <strin> >::iterator t;
+    vector< vector <string> >::iterator t;
     if(*path.rbegin() != '/'){
         path.append("/");
     }
@@ -98,16 +98,16 @@ void DBSystem::populateDBInfo()
     for(v=tables.begin(); v!=tables.end(); v++){
         // vector<string> PageFileList;
         // DiskMap[v] = PageFileList;
-        table = ParseCSV(path+table+".csv");
+        table = ParseCSV(path + (*v) + ".csv");
 
         int record_count = 0;
-        vector<string> pagefiles;
+        vector<PageFileInfo> pagefiles;
         cout << *v << endl;
 
         Page temp;
         for(t=table.begin(); t!=table.end(); t++){
             temp.generate_page(*v, record_count);
-            while(temp.insert_record(*table, page_size)!=-1){
+            while(temp.insert_record(*t, page_size)!=-1){
                 record_count++;
             }
         }
