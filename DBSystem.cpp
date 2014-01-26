@@ -1,7 +1,7 @@
 #include "DBSystem.h"
 
 DBSystem::DBSystem(){
-    new (&MainMemory) Page[num_pages];
+    MainMemory = new Page[num_pages];
 }
 
 void DBSystem::readConfig(string pathToConfigFile)
@@ -74,7 +74,7 @@ void DBSystem::readConfig(string pathToConfigFile)
 
 void DBSystem::populateDBInfo()
 {
-    DBSystem::ParseCSV("countries.csv");
+    ParseCSV("countries.csv");
 }
 
 string DBSystem::getRecord(string tableName, int recordId)
@@ -85,7 +85,7 @@ void DBSystem::insertRecord(string tableName, string record)
 {
 }
 
-vector< vector<string> > DBSystem::ParseCSV(string csvFilePath)
+vector< vector<string> > ParseCSV(string csvFilePath)
 {
     // Construct Path from string and table name somewhere
     string line;
@@ -137,7 +137,9 @@ vector< vector<string> > DBSystem::ParseCSV(string csvFilePath)
 
 int main()
 {
+    cout<<"here\n";
     DBSystem data;
+    cout<<"there\n";
     data.readConfig("config.txt");
     data.populateDBInfo();
     return 0;

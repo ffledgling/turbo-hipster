@@ -12,6 +12,8 @@
 using namespace std;
 typedef long long int LL;
 
+vector< vector<string> > ParseCSV(string csvFilePath);
+
 class Page
 {
     private:
@@ -33,15 +35,20 @@ class Page
             // Clears any existing data and updates internal structures according
             // to the new page.
 
+            //update metadata
             tablename = arg_tablename;
             start_index = arg_start_index;
             end_index = arg_end_index;
+
+            //clear records vector
+            recored.clear();
         }
 
         //will read the given file.
         //will return 1 on success and 0 othereise.
         bool read_page_file(string path_to_pagefile)
         {
+
         }
 
         //will write to page_file.
@@ -70,7 +77,6 @@ class DBSystem
         vector < string > tables;
         map < string, vector < pair < string, string > > > attributes;
         
-        vector< vector<string> > ParseCSV(string csvFilePath);
         // Struct for page info
         struct page_info{
             string tablename;
