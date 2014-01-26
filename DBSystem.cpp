@@ -1,7 +1,10 @@
 #include "DBSystem.h"
 
-DBSystem::DBSystem(){
+void DBSystem::initMainMemory(){
+    // Generate array of Page Objects
     new (&MainMemory) Page[num_pages];
+    // Initialize tracking info for these.
+    // MemoryMap[New PageInfo Object] = array index to which it corresponds;
 }
 
 void DBSystem::readConfig(string pathToConfigFile)
@@ -139,6 +142,7 @@ int main()
 {
     DBSystem data;
     data.readConfig("config.txt");
+    data.initMainMemory();
     data.populateDBInfo();
     return 0;
 }
