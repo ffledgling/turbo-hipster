@@ -1,6 +1,12 @@
 #ifndef DBSystem_H
 #define DBSystem_H
 #include <string>
+#include<iostream>
+#include<fstream>
+#include<list>
+#include<map>
+#include<vector>
+#include<cstdlib>
 
 using namespace std;
 typedef long long int LL;
