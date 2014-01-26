@@ -4,8 +4,9 @@
 #include<map>
 #include<vector>
 
-void DBSystem::readConfig(string str)
+void DBSystem::readConfig(string pathToConfigFile)
 {
+    
 }
 
 void DBSystem::populateDBInfo()
