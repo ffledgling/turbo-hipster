@@ -1,6 +1,13 @@
 #ifndef DBSystem_H
 #define DBSystem_H
 #include <string>
+#include <vector>
+#include <map>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <cstring>
+
 
 using namespace std;
 typedef long long int LL;
@@ -13,6 +20,7 @@ class DBSystem
         string path;
         vector < string > tables;
         map < string, vector < pair < string, string > > > attributes;
+        void ParseCSV(string csvFilePath);
 
     public:
         void readConfig(string str);
