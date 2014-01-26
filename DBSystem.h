@@ -41,7 +41,7 @@ class Page
             end_index = arg_end_index;
 
             //clear records vector
-            recored.clear();
+            records.clear();
         }
 
         //will read the given file.
