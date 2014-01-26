@@ -19,7 +19,7 @@ void DBSystem::readConfig(string pathToConfigFile)
         exit(0);
     }
 
-    LL pageSize, numPages;
+    int pageSize, numPages;
     string dataPath, label;
     infile >> label >> pageSize;
     infile >> label >> numPages;
@@ -206,6 +206,8 @@ int main()
     data.populateDBInfo();
 
     Page temp;
+    temp.generate_page("countries", 1);
     temp.read_page_file("countries.csv");
+    temp.write_page_file("out.csv");
     return 0;
 }
