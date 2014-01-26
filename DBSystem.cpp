@@ -82,6 +82,7 @@ void DBSystem::readConfig(string pathToConfigFile)
         attributes[tablename] = attr_list;
     }
     infile.close();
+
 }
 
 void DBSystem::populateDBInfo()
@@ -89,19 +90,34 @@ void DBSystem::populateDBInfo()
     vector<string>::iterator v;
     vector< pair <string, string> >::iterator r;
     vector< vector <string> > table;
+    vector< vector <strin> >::iterator t;
     if(*path.rbegin() != '/'){
         path.append("/");
     }
 
     for(v=tables.begin(); v!=tables.end(); v++){
+        // vector<string> PageFileList;
+        // DiskMap[v] = PageFileList;
+        table = ParseCSV(path+table+".csv");
+
+        int record_count = 0;
+        vector<string> pagefiles;
         cout << *v << endl;
+
+        Page temp;
+        for(t=table.begin(); t!=table.end(); t++){
+            temp.generate_page(*v, record_count);
+            while(temp.insert_record(*table, page_size)!=-1){
+                record_count++;
+            }
+        }
+
+
         for(r=attributes[*v].begin(); r!=attributes[*v].end(); r++){
             cout << (*r).first << " " << (*r).second << endl;
         }
 
-        // vector<string> PageFileList;
-        // map[v] = PageFileList;
-        // table = ParseCSV(path+table+".csv");
+        DiskMap[*v] = pagefiles;
     }
 }
 
@@ -187,7 +203,7 @@ int main()
     DBSystem data;
     data.readConfig("config.txt");
     data.initMainMemory();
-    // data.populateDBInfo();
+    data.populateDBInfo();
 
     Page temp;
     temp.read_page_file("countries.csv");

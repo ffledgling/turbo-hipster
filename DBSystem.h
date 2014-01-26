@@ -113,8 +113,20 @@ class DBSystem
                 }
         };
 
+        class PageFileInfo{
+            public:
+                string path;
+                int start_record_id;
+                int end_record_id;
+            PageFileInfo(){
+                path = "__none__";
+                start_record_id = -1;
+                end_record_id = -1;
+            }
+        }
+
         map<PageInfo, int> MemoryMap;
-        map<string, vector<string> > DiskMap;
+        map<string, vector<PageFileInfo> > DiskMap;
 
         Page* MainMemory;
 
