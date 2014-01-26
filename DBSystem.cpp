@@ -1,4 +1,5 @@
 #include "DBSystem.h"
+#include "class.page.h"
 
 void DBSystem::readConfig(string pathToConfigFile)
 {
