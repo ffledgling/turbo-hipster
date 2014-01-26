@@ -96,6 +96,10 @@ vector< vector<string> > DBSystem::ParseCSV(string csvFilePath)
     vector< vector<string> >::iterator t;
 
     csvfile.open(csvFilePath.c_str());
+    if(!csvfile.is_open()){
+        cout << "Error, couldn't read " << csvFilePath << " aborting..."<<endl;
+        exit(1);
+    }
 
     // Read file line by line.
     while(getline(csvfile, line)){
