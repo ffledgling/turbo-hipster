@@ -49,33 +49,34 @@ class Page
         //will return 1 on success and 0 othereise.
         bool read_page_file(string path_to_pagefile)
         {
-/*            ifstream infile;
+            ifstream infile;
             //read config file
             infile.open(path_to_pagefile.c_str());
             //abort if config file can't be opened
             if(!infile.is_open())
             {
                 perror("Error while opening file...\nAborting!!");
-                return 0;
+                return false;
             }
             
             //get records from csv, quotes may be present
-            vector < vector < strings > > csv_records;
+            vector < vector < string > > csv_records;
             csv_records = ParseCSV(path_to_pagefile);
 
-            int len = csv_records.length();
+            int len = csv_records.size();
 
             for(int i = 0; i < len; i++)
             {
                 vector< string > tmp_row;
-                int record_len = csv_records[i].length();
+                int record_len = csv_records[i].size();
                 for(int j = 0; j < record_len; j++)
                 {
                     string temp = strip_quotes(csv_records[i][j]);
                     tmp_row.push_back(temp);
                 }
                 records.push_back(tmp_row);
-            }*/
+            }
+            return true;
         }
 
         //will write to page_file.
