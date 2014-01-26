@@ -30,7 +30,8 @@ class Page
         // Use generate_page
         
         //modify the info of the page after creation of page.
-        void generate_page(string arg_tablename, LL arg_start_index, LL arg_end_index)
+        //return the end_index
+        LL generate_page(string arg_tablename, LL arg_start_index)
         {
             // Clears any existing data and updates internal structures according
             // to the new page.
@@ -38,7 +39,7 @@ class Page
             //update metadata
             tablename = arg_tablename;
             start_index = arg_start_index;
-            end_index = arg_end_index;
+            end_index = start_index;
 
             //clear records vector
             records.clear();
@@ -48,7 +49,16 @@ class Page
         //will return 1 on success and 0 othereise.
         bool read_page_file(string path_to_pagefile)
         {
-
+            ifstream infile;
+            //read config file
+            infile.open(path_to_pagefile.c_str());
+            //abort if config file can't be opened
+            if(!infile.is_open())
+            {
+                perror("Error while opening file...\nAborting!!");
+                return 0;
+            }
+            
         }
 
         //will write to page_file.
@@ -76,7 +86,7 @@ class DBSystem
         string path;
         vector < string > tables;
         map < string, vector < pair < string, string > > > attributes;
-        
+
         // Struct for page info
         class PageInfo{
             public:
@@ -86,13 +96,13 @@ class DBSystem
                 int end_record_id;
                 int LRU_age;
 
-            PageInfo(){
-                tablename = "__none__";
-                page_file_path = "__none__";
-                start_record_id = -1;
-                end_record_id = -1;
-                LRU_age = 0;
-            }
+                PageInfo(){
+                    tablename = "__none__";
+                    page_file_path = "__none__";
+                    start_record_id = -1;
+                    end_record_id = -1;
+                    LRU_age = 0;
+                }
         };
 
         map<PageInfo, int> MemoryMap;
