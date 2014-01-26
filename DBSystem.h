@@ -30,8 +30,7 @@ class Page
         // Use generate_page
         
         //modify the info of the page after creation of page.
-        //return the end_index
-        LL generate_page(string arg_tablename, LL arg_start_index)
+        void generate_page(string arg_tablename, LL arg_start_index)
         {
             // Clears any existing data and updates internal structures according
             // to the new page.
@@ -59,6 +58,7 @@ class Page
                 return 0;
             }
             
+
         }
 
         //will write to page_file.
