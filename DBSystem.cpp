@@ -122,9 +122,9 @@ void DBSystem::populateDBInfo()
         }
 
 
-        for(r=attributes[*v].begin(); r!=attributes[*v].end(); r++){
-            cout << (*r).first << " " << (*r).second << endl;
-        }
+        // for(r=attributes[*v].begin(); r!=attributes[*v].end(); r++){
+        //     cout << (*r).first << " " << (*r).second << endl;
+        // }
 
         DiskMap[*v] = pagefiles;
     }
