@@ -77,7 +77,7 @@ void DBSystem::readConfig(string pathToConfigFile)
 
 void DBSystem::populateDBInfo()
 {
-    DBSystem::ParseCSV("countries.csv");
+    ParseCSV("countries.csv");
 }
 
 string DBSystem::getRecord(string tableName, int recordId)
@@ -88,7 +88,8 @@ void DBSystem::insertRecord(string tableName, string record)
 {
 }
 
-vector< vector<string> > DBSystem::ParseCSV(string csvFilePath)
+// Global CSV parser
+vector< vector<string> > ParseCSV(string csvFilePath)
 {
     // Construct Path from string and table name somewhere
     string line;
@@ -140,7 +141,9 @@ vector< vector<string> > DBSystem::ParseCSV(string csvFilePath)
 
 int main()
 {
+    cout<<"here\n";
     DBSystem data;
+    cout<<"there\n";
     data.readConfig("config.txt");
     data.initMainMemory();
     data.populateDBInfo();
