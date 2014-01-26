@@ -22,6 +22,7 @@ class Page
         string tablename;
         int start_index;
         int end_index;
+        int size;
 
         //vector of the records.
         vector< vector < string > > records;
@@ -31,7 +32,7 @@ class Page
         // Use generate_page
         
         //modify the info of the page after creation of page.
-        void generate_page(string arg_tablename, LL arg_start_index)
+        void generate_page(string arg_tablename, int arg_start_index)
         {
             // Clears any existing data and updates internal structures according
             // to the new page.
@@ -40,6 +41,7 @@ class Page
             tablename = arg_tablename;
             start_index = arg_start_index;
             end_index = start_index;
+            size = 0;
 
             //clear records vector
             records.clear();
@@ -63,6 +65,8 @@ class Page
                 {
                     string temp = strip_quotes(csv_records[i][j]);
                     tmp_row.push_back(temp);
+                    //+1 for comma, if there, dunno what to add ??
+                    size += temp.size();
                 }
                 records.push_back(tmp_row);
                 end_index++;
@@ -99,7 +103,7 @@ class Page
         }
 
         //will return the entire record in a vector.
-        vector<string> get_record(LL record_id)
+        vector<string> get_record(int record_id)
         {
             vector<string> row;
 
@@ -113,16 +117,27 @@ class Page
         }
 
         //will return -1 on failure. Else index where new record is stored.
-        LL insert_record(vector<string>)
+        int insert_record(vector<string> row, int page_size)
         {
+            int new_size = 0;
+            for(int i=0; i<row.size(); i++)
+                new_size += row[i].size();
+            if(size + new_size <= page_size)
+            {
+                records.push_back(row);
+                end_index++;
+                size += new_size;
+                return end_index;
+            }
+            return -1;
         }
 };
 
 class DBSystem
 {
     private:
-        LL page_size;
-        LL num_pages;
+        int page_size;
+        int num_pages;
         string path;
         vector < string > tables;
         map < string, vector < pair < string, string > > > attributes;
