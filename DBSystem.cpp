@@ -2,7 +2,7 @@
 
 void DBSystem::initMainMemory(){
     // Generate array of Page Objects
-    new (&MainMemory) Page[num_pages];
+    MainMemory = new Page[num_pages];
     // Initialize tracking info for these.
     // MemoryMap[New PageInfo Object] = array index to which it corresponds;
 }

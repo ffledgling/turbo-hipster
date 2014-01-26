@@ -49,16 +49,6 @@ class Page
         //will return 1 on success and 0 othereise.
         bool read_page_file(string path_to_pagefile)
         {
-            ifstream infile;
-            //read config file
-            infile.open(path_to_pagefile.c_str());
-            //abort if config file can't be opened
-            if(!infile.is_open())
-            {
-                perror("Error while opening file...\nAborting!!");
-                return false;
-            }
-            
             //get records from csv, quotes may be present
             vector < vector < string > > csv_records;
             csv_records = ParseCSV(path_to_pagefile);
