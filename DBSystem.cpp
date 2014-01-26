@@ -177,7 +177,9 @@ string strip_quotes(string input)
         end--;
     }
 
-    return input.substr();
+    int size = end - start + 1;
+
+    return input.substr(start, size);
 }
 
 int main()
