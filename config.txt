@@ -1,6 +1,7 @@
 PAGE_SIZE 100
 NUM_PAGES 4
 PATH_FOR_DATA /tmp/
+
 BEGIN
 countries
 ID, int
@@ -10,7 +11,7 @@ CONTINENT, String
 END
 
 BEGIN
-countries
+sex
 ID, int
 CODE, String
 NAME, String

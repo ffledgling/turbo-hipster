@@ -124,6 +124,7 @@ class DBSystem
         };
 
         map<PageInfo, int> MemoryMap;
+        map<string, vector<string> > DiskMap;
 
         Page* MainMemory;
 

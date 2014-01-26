@@ -37,19 +37,25 @@ void DBSystem::readConfig(string pathToConfigFile)
         string tablename;
         string temp;
         infile >> temp;
+        if(temp == "")
+        {
+            break;
+        }
 
         if(temp.compare("BEGIN") != 0)
         {
-            perror("Unable to find BEGIN toke...\nAborting!!");
+            perror("Unable to find BEGIN token...\nAborting!!");
             exit(0);
         }
+        
+        //push tablename into tables vector
+        infile >> tablename;
+        tables.push_back(tablename);
+        attr_list.clear();
+
         while(!infile.eof())
         {
             string attr, data_type;
-            attr_list.clear();
-            //push tablename into tables vector
-            infile >> tablename;
-            tables.push_back(tablename);
 
             infile >> temp;
             if(temp.compare("END") == 0)
@@ -67,10 +73,12 @@ void DBSystem::readConfig(string pathToConfigFile)
             {
                 attr = temp;
             }
-
+            
             infile >> data_type;
+
             attr_list.push_back(make_pair(attr, data_type));
         }
+
         attributes[tablename] = attr_list;
     }
     for(int i=0; i<tables.length(); i++)
@@ -81,7 +89,23 @@ void DBSystem::readConfig(string pathToConfigFile)
 
 void DBSystem::populateDBInfo()
 {
-    ParseCSV("countries.csv");
+    vector<string>::iterator v;
+    vector< pair <string, string> >::iterator r;
+    vector< vector <string> > table;
+    if(*path.rbegin() != '/'){
+        path.append("/");
+    }
+
+    for(v=tables.begin(); v!=tables.end(); v++){
+        cout << *v << endl;
+        for(r=attributes[*v].begin(); r!=attributes[*v].end(); r++){
+            cout << (*r).first << " " << (*r).second << endl;
+        }
+
+        // vector<string> PageFileList;
+        // map[v] = PageFileList;
+        // table = ParseCSV(path+table+".csv");
+    }
 }
 
 string DBSystem::getRecord(string tableName, int recordId)
@@ -162,9 +186,7 @@ string strip_quotes(string input)
 
 int main()
 {
-    cout<<"here\n";
     DBSystem data;
-    cout<<"there\n";
     data.readConfig("config.txt");
     data.initMainMemory();
     data.populateDBInfo();
