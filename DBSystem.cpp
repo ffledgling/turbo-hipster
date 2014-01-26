@@ -81,10 +81,6 @@ void DBSystem::readConfig(string pathToConfigFile)
 
         attributes[tablename] = attr_list;
     }
-    for(int i=0; i<tables.length(); i++)
-    {
-        cout<<tables[i] << endl;
-    }
 }
 
 void DBSystem::populateDBInfo()
@@ -181,7 +177,7 @@ string strip_quotes(string input)
         end--;
     }
 
-    return input.substr()
+    return input.substr();
 }
 
 int main()

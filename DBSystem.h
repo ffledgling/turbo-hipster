@@ -75,7 +75,7 @@ class Page
                     tmp_row.push_back(temp);
                 }
                 records.push_back(tmp_row);
-            }
+            }*/
         }
 
         //will write to page_file.
@@ -92,8 +92,7 @@ class Page
         //will return -1 on failure. Else index where new record is stored.
         LL insert_record(vector<string>)
         {
-        }*/
-        return 0;
+        }
 };
 
 class DBSystem
