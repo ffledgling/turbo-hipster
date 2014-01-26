@@ -47,7 +47,7 @@ void DBSystem::readConfig(string pathToConfigFile)
             perror("Unable to find BEGIN token...\nAborting!!");
             exit(0);
         }
-        
+
         //push tablename into tables vector
         infile >> tablename;
         tables.push_back(tablename);
@@ -63,7 +63,7 @@ void DBSystem::readConfig(string pathToConfigFile)
                 //break, as one table is complete
                 break;
             }
-           
+
             //remove last comma, if present
             if(temp[temp.size() - 1] == ',')
             {
@@ -73,7 +73,7 @@ void DBSystem::readConfig(string pathToConfigFile)
             {
                 attr = temp;
             }
-            
+
             infile >> data_type;
 
             attr_list.push_back(make_pair(attr, data_type));
@@ -81,6 +81,7 @@ void DBSystem::readConfig(string pathToConfigFile)
 
         attributes[tablename] = attr_list;
     }
+    infile.close();
 }
 
 void DBSystem::populateDBInfo()
@@ -146,7 +147,6 @@ vector< vector<string> > ParseCSV(string csvFilePath)
         // Insert record into table and clear temp storage record.
         table.push_back(record);
         record.clear();
-
     }
 
     // print records in table
@@ -158,9 +158,9 @@ vector< vector<string> > ParseCSV(string csvFilePath)
     //     cout << endl;
     // }
 
+    csvfile.close();
 
-
-   return table;
+    return table;
 }
 
 string strip_quotes(string input)
@@ -171,7 +171,7 @@ string strip_quotes(string input)
     {
         start++;
     }
-    
+
     while(input[end] == ' ' || input[end] == '"')
     {
         end--;
