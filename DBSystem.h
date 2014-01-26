@@ -78,18 +78,29 @@ class DBSystem
         map < string, vector < pair < string, string > > > attributes;
         
         // Struct for page info
-        struct page_info{
-            string tablename;
-            string page_file_path;
-            int start_record_id;
-            int end_record_id;
-            int LRU;
+        class PageInfo{
+            public:
+                string tablename;
+                string page_file_path;
+                int start_record_id;
+                int end_record_id;
+                int LRU_age;
+
+            PageInfo(){
+                tablename = "__none__";
+                page_file_path = "__none__";
+                start_record_id = -1;
+                end_record_id = -1;
+                LRU_age = 0;
+            }
         };
+
+        map<PageInfo, int> MemoryMap;
 
         Page* MainMemory;
 
     public:
-        DBSystem();
+        void initMainMemory();
         void readConfig(string str);
         void populateDBInfo();
         string getRecord(string tableName, int recordId);

@@ -1,7 +1,10 @@
 #include "DBSystem.h"
 
-DBSystem::DBSystem(){
-    MainMemory = new Page[num_pages];
+void DBSystem::initMainMemory(){
+    // Generate array of Page Objects
+    new (&MainMemory) Page[num_pages];
+    // Initialize tracking info for these.
+    // MemoryMap[New PageInfo Object] = array index to which it corresponds;
 }
 
 void DBSystem::readConfig(string pathToConfigFile)
@@ -85,6 +88,7 @@ void DBSystem::insertRecord(string tableName, string record)
 {
 }
 
+// Global CSV parser
 vector< vector<string> > ParseCSV(string csvFilePath)
 {
     // Construct Path from string and table name somewhere
@@ -141,6 +145,7 @@ int main()
     DBSystem data;
     cout<<"there\n";
     data.readConfig("config.txt");
+    data.initMainMemory();
     data.populateDBInfo();
     return 0;
 }
