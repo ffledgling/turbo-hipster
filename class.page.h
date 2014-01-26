@@ -11,7 +11,7 @@ class Page
 
     public:
         //constructor to initialize the page.
-        void Page(string arg_tablename, LL arg_start_index, LL arg_end_index)
+        Page(string arg_tablename, LL arg_start_index, LL arg_end_index)
         {
             tablename = arg_tablename;
             start_index = arg_start_index;
@@ -47,4 +47,4 @@ class Page
         LL insert_record(vector<string>)
         {
         }
-}
+};
