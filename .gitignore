@@ -27,3 +27,7 @@
 *.log
 *.in
 
+# Swap files
+# ##########
+*.swp
+*.swo
