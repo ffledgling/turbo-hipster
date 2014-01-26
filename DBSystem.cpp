@@ -73,6 +73,10 @@ void DBSystem::readConfig(string pathToConfigFile)
         }
         attributes[tablename] = attr_list;
     }
+    for(int i=0; i<tables.length(); i++)
+    {
+        cout<<tables[i] << endl;
+    }
 }
 
 void DBSystem::populateDBInfo()
@@ -137,6 +141,23 @@ vector< vector<string> > ParseCSV(string csvFilePath)
 
 
    return table;
+}
+
+string strip_quotes(string input)
+{
+    int start = 0;
+    int end = input.length() - 1;
+    while(input[start] == ' ' || input[start] == '"')
+    {
+        start++;
+    }
+    
+    while(input[end] == ' ' || input[end] == '"')
+    {
+        end--;
+    }
+
+    return input.substr()
 }
 
 int main()

@@ -13,6 +13,7 @@ using namespace std;
 typedef long long int LL;
 
 vector< vector<string> > ParseCSV(string csvFilePath);
+string strip_quotes(string input);
 
 class Page
 {
@@ -48,7 +49,7 @@ class Page
         //will return 1 on success and 0 othereise.
         bool read_page_file(string path_to_pagefile)
         {
-            ifstream infile;
+/*            ifstream infile;
             //read config file
             infile.open(path_to_pagefile.c_str());
             //abort if config file can't be opened
@@ -58,7 +59,23 @@ class Page
                 return 0;
             }
             
+            //get records from csv, quotes may be present
+            vector < vector < strings > > csv_records;
+            csv_records = ParseCSV(path_to_pagefile);
 
+            int len = csv_records.length();
+
+            for(int i = 0; i < len; i++)
+            {
+                vector< string > tmp_row;
+                int record_len = csv_records[i].length();
+                for(int j = 0; j < record_len; j++)
+                {
+                    string temp = strip_quotes(csv_records[i][j]);
+                    tmp_row.push_back(temp);
+                }
+                records.push_back(tmp_row);
+            }
         }
 
         //will write to page_file.
@@ -75,7 +92,8 @@ class Page
         //will return -1 on failure. Else index where new record is stored.
         LL insert_record(vector<string>)
         {
-        }
+        }*/
+        return 0;
 };
 
 class DBSystem
