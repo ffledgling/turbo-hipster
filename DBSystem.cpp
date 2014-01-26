@@ -4,18 +4,23 @@
 #include<map>
 #include<vector>
 
-void DBSystem::readConfig(string str){
+void DBSystem::readConfig(string str)
+{
 }
 
-void DBSystem::populateDBInfo(){
+void DBSystem::populateDBInfo()
+{
 }
 
-string DBSystem::getRecord(string tableName, int recordId){
+string DBSystem::getRecord(string tableName, int recordId)
+{
 }
 
-void DBSystem::insertRecord(string tableName, string record){
+void DBSystem::insertRecord(string tableName, string record)
+{
 }
 
-int main(){
+int main()
+{
     return 0;
 }
