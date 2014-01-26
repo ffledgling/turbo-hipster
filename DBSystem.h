@@ -16,8 +16,8 @@ typedef long long int LL;
 class DBSystem
 {
     private:
-        long long int page_size;
-        long long int num_pages;
+        LL page_size;
+        LL num_pages;
         string path;
         vector < string > tables;
         map < string, vector < pair < string, string > > > attributes;
