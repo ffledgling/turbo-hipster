@@ -93,10 +93,10 @@ class Page
                 for(int j=0; j<records[i].size(); j++)
                 {
                     if(j!=0)
-                        cout << ",";
-                    cout << records[i][j];
+                        outfile << ",";
+                    outfile << records[i][j];
                 }
-                cout << "\n";
+                outfile << "\n";
             }
 
             return true;

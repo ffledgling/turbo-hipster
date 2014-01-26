@@ -101,12 +101,23 @@ void DBSystem::populateDBInfo()
         table = ParseCSV(path + (*v) + ".csv");
 
         int record_count = 0;
+        int pagefile_count = 0;
         vector<PageFileInfo> pagefiles;
+
         // print table name
-        cout << *v << endl;
+        // cout << *v << endl;
 
         Page temp;
+        // Start Pagefileinfo for DiskMap
         PageFileInfo pfi;
+        pfi.start_record_id = record_count;
+
+        // This is why C++ sucks sweaty donkey balls;
+        // TODO: Fix this to use sstream/ostream magic.
+            char intconversionptr[16];
+            sprintf(intconversionptr,"%d", pagefile_count);
+        // Damn you C++, just give me a to_string() already.
+        pfi.path = *v + "_PageFile_" + string(intconversionptr) + ".csv";
 
         temp.generate_page(*v, record_count);
         for(t=table.begin(); t!=table.end(); t++){
@@ -114,20 +125,68 @@ void DBSystem::populateDBInfo()
             if(temp.insert_record(*t, page_size)!=-1){
                 record_count++;
             } else {
-                temp.write_page_file(*v + "_page_file.csv");
+
+                // Set PageFile info last record
+                pfi.end_record_id = record_count;
+                // Write PageFile to disk
+                temp.write_page_file(pfi.path);
+                // Insert pfi to diskmap here
+                pagefiles.push_back(pfi);
+                // Increment PageFile count for table
+                pagefile_count++;
+
                 record_count++;
                 temp.generate_page(*v, record_count);
                 temp.insert_record(*t, page_size);
+
+                // Start the fresh PageFileInfo stuff here:
+
+                pfi.start_record_id = record_count;
+                // This is why C++ sucks sweaty donkey balls;
+                // TODO: Fix this to use sstream/ostream magic.
+                    char intconversionptr[16];
+                    sprintf(intconversionptr,"%d", pagefile_count);
+                // Damn you C++, just give me a to_string() already.
+                pfi.path = *v + "_PageFile_" + string(intconversionptr) + ".csv";
+
+
             }
         }
 
+        // One Last flush to clear any residual record/pagefile
 
-        for(r=attributes[*v].begin(); r!=attributes[*v].end(); r++){
-            cout << (*r).first << " " << (*r).second << endl;
-        }
+        // Set PageFile info last record
+        pfi.end_record_id = record_count;
+        // Write PageFile to disk
+        temp.write_page_file(pfi.path);
+        // Insert pfi to diskmap here
+        pagefiles.push_back(pfi);
 
+        // Flush Vector for pagefiles to DiskMap
         DiskMap[*v] = pagefiles;
+        pagefiles.clear();
+
+
+
+        // Print Attributes for the table?
+        // for(r=attributes[*v].begin(); r!=attributes[*v].end(); r++){
+        //     cout << (*r).first << " " << (*r).second << endl;
+        // }
+
     }
+    // Print the DiskMap after
+    // vector<PageFileInfo>::iterator pfi_iter;
+
+    // for(v=tables.begin(); v!=tables.end(); v++){
+
+    //     for(pfi_iter=(DiskMap[*v]).begin(); pfi_iter!=(DiskMap[*v]).end(); pfi_iter++){
+
+    //         cout << *v+" : " << (*pfi_iter).path + " " << (*pfi_iter).start_record_id
+    //              << "," << (*pfi_iter).end_record_id << endl;
+    //     }
+    // }
+
+    
 }
 
 string DBSystem::getRecord(string tableName, int recordId)
