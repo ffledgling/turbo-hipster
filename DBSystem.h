@@ -8,6 +8,7 @@
 #include <sstream>
 #include <cstring>
 #include <cstdlib>
+#include <sys/stat.h>
 
 using namespace std;
 typedef long long int LL;
@@ -139,6 +140,8 @@ class DBSystem
         int page_size;
         int num_pages;
         string path;
+        string pagefilepath;
+
         vector < string > tables;
         map < string, vector < pair < string, string > > > attributes;
 
@@ -178,6 +181,7 @@ class DBSystem
         Page* MainMemory;
 
     public:
+        DBSystem();
         void initMainMemory();
         void readConfig(string str);
         void populateDBInfo();

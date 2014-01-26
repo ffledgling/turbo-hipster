@@ -1,4 +1,8 @@
 #include "DBSystem.h"
+DBSystem::DBSystem(){
+    pagefilepath = "PageFiles/";
+    mkdir(pagefilepath.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+}
 
 void DBSystem::initMainMemory(){
     // Generate array of Page Objects
@@ -117,7 +121,7 @@ void DBSystem::populateDBInfo()
             char intconversionptr[16];
             sprintf(intconversionptr,"%d", pagefile_count);
         // Damn you C++, just give me a to_string() already.
-        pfi.path = *v + "_PageFile_" + string(intconversionptr) + ".csv";
+        pfi.path = pagefilepath + *v + "_PageFile_" + string(intconversionptr) + ".csv";
 
         temp.generate_page(*v, record_count);
         for(t=table.begin(); t!=table.end(); t++){
@@ -147,7 +151,7 @@ void DBSystem::populateDBInfo()
                     char intconversionptr[16];
                     sprintf(intconversionptr,"%d", pagefile_count);
                 // Damn you C++, just give me a to_string() already.
-                pfi.path = *v + "_PageFile_" + string(intconversionptr) + ".csv";
+                pfi.path = pagefilepath + *v + "_PageFile_" + string(intconversionptr) + ".csv";
 
 
             }
