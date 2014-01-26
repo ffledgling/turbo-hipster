@@ -1,5 +1,8 @@
 #include "DBSystem.h"
-#include "class.page.h"
+
+DBSystem::DBSystem(){
+    new (&MainMemory) Page[num_pages];
+}
 
 void DBSystem::readConfig(string pathToConfigFile)
 {
