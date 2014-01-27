@@ -190,8 +190,9 @@ void DBSystem::populateDBInfo()
                 record_count++;
             } else {
 
+                //record_count--;
                 // Set PageFile info last record
-                pfi.end_record_id = record_count;
+                pfi.end_record_id = record_count - 1;
                 // Write PageFile to disk
                 temp.write_page_file(pfi.path);
                 // Insert pfi to diskmap here
@@ -199,7 +200,6 @@ void DBSystem::populateDBInfo()
                 // Increment PageFile count for table
                 pagefile_count++;
 
-                record_count++;
                 temp.generate_page(*v, record_count);
                 temp.insert_record(*t, page_size);
 
@@ -213,6 +213,7 @@ void DBSystem::populateDBInfo()
                 // Damn you C++, just give me a to_string() already.
                 pfi.path = pagefilepath + *v + "_PageFile_" + string(intconversionptr) + ".csv";
 
+                record_count++;
 
             }
         }
@@ -220,7 +221,7 @@ void DBSystem::populateDBInfo()
         // One Last flush to clear any residual record/pagefile
 
         // Set PageFile info last record
-        pfi.end_record_id = record_count;
+        pfi.end_record_id = record_count-1;
         // Write PageFile to disk
         temp.write_page_file(pfi.path);
         // Insert pfi to diskmap here
@@ -264,7 +265,7 @@ string DBSystem::getRecord(string tableName, int recordId)
         // increment LRU
         LRU_timer++;
         MainMemory[pgno].LRU_age = LRU_timer;
-        cout << "HIT\n";
+        cout << "HIT " << tableName << " " << recordId << endl;
     } else {
         pgno = getRecordIntoMemory(tableName, recordId);
 
@@ -461,6 +462,7 @@ string strip_quotes(string input)
     return input.substr(start, size);
 }
 
+
 int main()
 {
     DBSystem data;
@@ -468,9 +470,15 @@ int main()
     data.initMainMemory();
     data.populateDBInfo();
 
-    Page temp;
-    temp.generate_page("countries", 1);
-    temp.read_page_file("countries.csv");
-    temp.write_page_file("out.csv");
+    for(int i=0; i<45; i++)
+    {
+        cout << data.getRecord("countries", i);
+
+        for(int j=0; j<4; j++)
+        {
+            cout << data.MainMemory[j].tablename << " " << data.MainMemory[j].start_index << " " << data.MainMemory[j].end_index << " " << data.MainMemory[j].LRU_age << endl;
+        }
+    }
+
     return 0;
 }

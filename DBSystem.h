@@ -83,6 +83,7 @@ class Page
                 records.push_back(tmp_row);
                 end_index++;
             }
+            end_index--;
             return true;
         }
 
@@ -191,13 +192,13 @@ class DBSystem
         map<int, PageInfo> MemoryMap;
         map<string, vector<PageFileInfo> > DiskMap;
 
-        Page* MainMemory;
-
         int checkRecordInMemory(string tablename, int recordID);
         int getRecordIntoMemory(string tablename, int recordID);
         PageFileInfo searchPageFile(string tablename, int recordID);
 
     public:
+        Page* MainMemory;
+
         DBSystem();
         void initMainMemory();
         void readConfig(string str);
