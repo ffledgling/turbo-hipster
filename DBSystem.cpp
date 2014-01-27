@@ -1,15 +1,66 @@
 #include "DBSystem.h"
-DBSystem::DBSystem(){
+DBSystem::DBSystem()
+{
+    LRU_timer = 0;
+
+    // Create Dir for pagefiles
     pagefilepath = "PageFiles/";
     mkdir(pagefilepath.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 }
 
-void DBSystem::initMainMemory(){
+void DBSystem::initMainMemory()
+{
     // Generate array of Page Objects
     MainMemory = new Page[num_pages];
     // Initialize tracking info for these.
     // MemoryMap[New PageInfo Object] = array index to which it corresponds;
 }
+
+bool DBSystem::checkRecordInMemory(string tablename, int recordID)
+{
+    for(int i=0; i<num_pages; i++){
+        if( MainMemory[i].tablename == tablename \
+                && MainMemory[i].start_index <= recordID \
+                && MainMemory[i].end_index >= recordID) return true;
+    }
+    return false;
+}
+
+void DBSystem::getRecordIntoMemory(string tablename, int recordID)
+{
+    PageFileInfo pfi; // Page File Info.
+    pfi = searchPageFile(tablename, recordID);
+    if(pfi.path == "__none__"){
+        cout << "No such record was found, aborting ..."<< endl;
+        exit(1);
+    }
+
+    // Find LRU Page.
+    int min_index = 0;
+    for(int i=1; i<num_pages; i++){
+        if(MainMemory[i].LRU_age < MainMemory[min_index].LRU_age) min_index = i;
+    }
+    MainMemory[min_index].generate_page(tablename, pfi.start_record_id);
+    if(!MainMemory[min_index].read_page_file(pfi.path)){
+        cout << "Something went wrong, could not load page... aborting!" << endl;
+        exit(1);
+    }
+}
+
+DBSystem::PageFileInfo DBSystem::searchPageFile(string tablename, int recordID)
+{
+    vector<PageFileInfo>::iterator v;
+
+    for(v=DiskMap[tablename].begin(); v!=DiskMap[tablename].end(); v++){
+        if((*v).start_record_id <= recordID && (*v).end_record_id >= recordID){
+            return (*v);
+            // do something here
+        }
+    }
+    // Return null string if no such record exists.
+    return PageFileInfo();
+}
+
 
 void DBSystem::readConfig(string pathToConfigFile)
 {

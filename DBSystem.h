@@ -9,6 +9,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <sys/stat.h>
+#include <climits>
 
 using namespace std;
 typedef long long int LL;
@@ -19,16 +20,25 @@ string strip_quotes(string input);
 class Page
 {
     private:
+
+    public:
         //meta info of the table
         string tablename;
         int start_index;
         int end_index;
         int size;
+        int LRU_age;
+
+        Page(){
+            tablename = "__none__";
+            start_index = -1;
+            end_index = -1;
+            LRU_age = 0;
+            size = 0;
+        }
 
         //vector of the records.
         vector< vector < string > > records;
-
-    public:
         //Using default constructor to initialize the page.
         // Use generate_page
         
@@ -139,6 +149,7 @@ class DBSystem
     private:
         int page_size;
         int num_pages;
+        int LRU_timer;
         string path;
         string pagefilepath;
 
@@ -175,10 +186,14 @@ class DBSystem
             }
         };
 
-        map<PageInfo, int> MemoryMap;
+        map<int, PageInfo> MemoryMap;
         map<string, vector<PageFileInfo> > DiskMap;
 
         Page* MainMemory;
+
+        bool checkRecordInMemory(string tablename, int recordID);
+        void getRecordIntoMemory(string tablename, int recordID);
+        PageFileInfo searchPageFile(string tablename, int recordID);
 
     public:
         DBSystem();
