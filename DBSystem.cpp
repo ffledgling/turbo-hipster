@@ -16,23 +16,30 @@ void DBSystem::initMainMemory()
     // MemoryMap[New PageInfo Object] = array index to which it corresponds;
 }
 
-bool DBSystem::checkRecordInMemory(string tablename, int recordID)
+int DBSystem::checkRecordInMemory(string tablename, int recordID)
 {
+    // If record in Memory, return Page Number i.e index for MainMemory[].
+    // else return -1
+
     for(int i=0; i<num_pages; i++){
         if( MainMemory[i].tablename == tablename \
                 && MainMemory[i].start_index <= recordID \
-                && MainMemory[i].end_index >= recordID) return true;
+                && MainMemory[i].end_index >= recordID) return i;
     }
-    return false;
+    return -1;
 }
 
-void DBSystem::getRecordIntoMemory(string tablename, int recordID)
+int DBSystem::getRecordIntoMemory(string tablename, int recordID)
 {
+    // returns Page Number i.e index of MainMemory[] incase of success
+    // else returns  -1.
+    //
     PageFileInfo pfi; // Page File Info.
     pfi = searchPageFile(tablename, recordID);
     if(pfi.path == "__none__"){
         cout << "No such record was found, aborting ..."<< endl;
         exit(1);
+        return -1;
     }
 
     // Find LRU Page.
@@ -44,7 +51,9 @@ void DBSystem::getRecordIntoMemory(string tablename, int recordID)
     if(!MainMemory[min_index].read_page_file(pfi.path)){
         cout << "Something went wrong, could not load page... aborting!" << endl;
         exit(1);
+        return -1;
     }
+    return min_index;
 }
 
 DBSystem::PageFileInfo DBSystem::searchPageFile(string tablename, int recordID)
@@ -246,10 +255,127 @@ void DBSystem::populateDBInfo()
 
 string DBSystem::getRecord(string tableName, int recordId)
 {
+    vector<string> tmp_record;
+    string record;
+
+    int pgno = checkRecordInMemory(tableName, recordId);
+    if(pgno!=-1){
+        tmp_record = MainMemory[pgno].get_record(recordId);
+        // increment LRU
+        LRU_timer++;
+        MainMemory[pgno].LRU_age = LRU_timer;
+        cout << "HIT\n";
+    } else {
+        pgno = getRecordIntoMemory(tableName, recordId);
+
+        tmp_record = MainMemory[pgno].get_record(recordId);
+        // increment LRU
+        LRU_timer++;
+        MainMemory[pgno].LRU_age = LRU_timer;
+        cout << "MISS " << pgno << endl;
+    }
+    vector<string>::iterator v;
+    for(v=tmp_record.begin(); v!=tmp_record.end(); v++){
+        record.append(*v);
+        record.append(",");
+    }
+    *record.rbegin() = '\n';
+
+    return record;
 }
 
 void DBSystem::insertRecord(string tableName, string record)
 {
+    //get pagefile count
+    int pagefile_count = DiskMap[tableName].size();
+
+    //tokenize record
+    vector<string>record_row = tokenize(record);
+    
+    PageFileInfo temp = *(DiskMap[tableName].rbegin());
+    int pgno = checkRecordInMemory(tableName, temp.end_record_id);
+
+    int already_in_mem = 1;
+    //bring record in memory, if not present
+    if(pgno == -1)
+    {
+        already_in_mem = 0;
+        pgno = getRecordIntoMemory(tableName, temp.end_record_id);
+    }
+    
+    //assuming page already in memory, try to insert
+    if(MainMemory[pgno].insert_record(record_row, page_size))
+    {
+        //update record IDs in DiskMap
+        temp.end_record_id++;
+        *(DiskMap[tableName].rbegin()) = temp;
+
+        LRU_timer++;
+        MainMemory[pgno].LRU_age = LRU_timer;
+        cout<<"HIT\n";
+        return;
+    }
+
+    else
+    {
+        //page not in memory, but new record cant be inserted
+        if(already_in_mem == 0)
+        {
+            PageFileInfo pfi;
+            pfi.start_record_id = temp.end_record_id + 1;
+
+            //record can't be inserted into current page, insert into new page
+            MainMemory[pgno].generate_page(tableName, temp.end_record_id + 1);
+            pfi.end_record_id = MainMemory[pgno].insert_record(record_row, page_size);
+            
+            // This is why C++ sucks sweaty donkey balls;
+            // TODO: Fix this to use sstream/ostream magic.
+            char intconversionptr[16];
+            sprintf(intconversionptr,"%d", pagefile_count);
+            // Damn you C++, just give me a to_string() already.
+            pfi.path = pagefilepath + tableName + "_PageFile_" + string(intconversionptr) + ".csv";
+
+            MainMemory[pgno].write_page_file(pfi.path);
+
+            LRU_timer++;
+            MainMemory[pgno].LRU_age = LRU_timer;
+    
+            DiskMap[tableName].push_back(pfi);
+        }
+
+        //page in memory, but new record cant be inserted
+        else
+        {
+            PageFileInfo pfi;
+            pfi.start_record_id = temp.end_record_id + 1;
+
+            // Find LRU Page.
+            int min_index = 0;
+            for(int i=1; i<num_pages; i++){
+                if(MainMemory[i].LRU_age < MainMemory[min_index].LRU_age) min_index = i;
+            }
+
+            pgno = min_index;
+
+            //record can't be inserted into current page, insert into new page
+            MainMemory[pgno].generate_page(tableName, temp.end_record_id + 1);
+            pfi.end_record_id = MainMemory[pgno].insert_record(record_row, page_size);
+            
+            // TODO: Fix this to use sstream/ostream magic.
+            char intconversionptr[16];
+            sprintf(intconversionptr,"%d", pagefile_count);
+            
+            pfi.path = pagefilepath + tableName + "_PageFile_" + string(intconversionptr) + ".csv";
+
+            MainMemory[pgno].write_page_file(pfi.path);
+
+            LRU_timer++;
+            MainMemory[pgno].LRU_age = LRU_timer;
+    
+            DiskMap[tableName].push_back(pfi);
+        }
+    }
+
 }
 
 // Global CSV parser
@@ -300,6 +426,20 @@ vector< vector<string> > ParseCSV(string csvFilePath)
     csvfile.close();
 
     return table;
+}
+
+vector<string> tokenize(string line)
+{
+        vector<string>record;
+        string record_attr;
+
+        stringstream ss(line);
+
+        // read string stream with ',' as delimiter
+        while(getline(ss, record_attr, ',')){
+            record.push_back(record_attr);
+        }
+        return record;
 }
 
 string strip_quotes(string input)

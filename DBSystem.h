@@ -15,6 +15,7 @@ using namespace std;
 typedef long long int LL;
 
 vector< vector<string> > ParseCSV(string csvFilePath);
+vector<string> tokenize(string line);
 string strip_quotes(string input);
 
 class Page
@@ -138,7 +139,8 @@ class Page
                 records.push_back(row);
                 end_index++;
                 size += new_size;
-                return end_index;
+                //-1 because of inclusive indexing.
+                return end_index-1;
             }
             return -1;
         }
@@ -191,8 +193,8 @@ class DBSystem
 
         Page* MainMemory;
 
-        bool checkRecordInMemory(string tablename, int recordID);
-        void getRecordIntoMemory(string tablename, int recordID);
+        int checkRecordInMemory(string tablename, int recordID);
+        int getRecordIntoMemory(string tablename, int recordID);
         PageFileInfo searchPageFile(string tablename, int recordID);
 
     public:
