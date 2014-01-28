@@ -75,7 +75,11 @@ class Page
                 int record_len = csv_records[i].size();
                 for(int j = 0; j < record_len; j++)
                 {
-                    string temp = strip_quotes(csv_records[i][j]);
+                    //uncomment this line if want to strip quotes
+                    //string temp = strip_quotes(csv_records[i][j]);
+                    //
+                    //comment this line if dont want to strip quotes
+                    string temp = csv_records[i][j];
                     tmp_row.push_back(temp);
                     //+1 for comma, if there, dunno what to add ??
                     size += temp.size();
@@ -134,9 +138,17 @@ class Page
         {
             int new_size = 0;
             for(int i=0; i<row.size(); i++)
-                new_size += row[i].size();
+                new_size += row[i].size() + 1; // +1 for comma and for newline if its last record
+            new_size--; //dont count newline as of now, see if its possible to insert it.
             if(size + new_size <= page_size)
             {
+                //comment this part if dont want to deal with newline.
+                if(size + new_size < page_size) // check if there's space for a newline also
+                {
+                    new_size++;
+                }
+                //comment till here
+
                 records.push_back(row);
                 end_index++;
                 size += new_size;

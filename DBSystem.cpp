@@ -265,7 +265,7 @@ string DBSystem::getRecord(string tableName, int recordId)
         // increment LRU
         LRU_timer++;
         MainMemory[pgno].LRU_age = LRU_timer;
-        cout << "HIT " << tableName << " " << recordId << endl;
+        cout << "HIT\n";  //<< tableName << " " << recordId << endl;
     } else {
         pgno = getRecordIntoMemory(tableName, recordId);
 
@@ -305,15 +305,21 @@ void DBSystem::insertRecord(string tableName, string record)
     }
     
     //assuming page already in memory, try to insert
-    if(MainMemory[pgno].insert_record(record_row, page_size))
+    if(MainMemory[pgno].insert_record(record_row, page_size) != -1)
     {
         //update record IDs in DiskMap
         temp.end_record_id++;
         *(DiskMap[tableName].rbegin()) = temp;
+        
+        //write to page file
+        PageFileInfo pfi;
+        char intconversionptr[16];
+        sprintf(intconversionptr,"%d", pagefile_count - 1);
+        pfi.path = pagefilepath + tableName + "_PageFile_" + string(intconversionptr) + ".csv";
+        MainMemory[pgno].write_page_file(pfi.path);
 
         LRU_timer++;
         MainMemory[pgno].LRU_age = LRU_timer;
-        cout<<"HIT\n";
         return;
     }
 
@@ -376,7 +382,6 @@ void DBSystem::insertRecord(string tableName, string record)
             DiskMap[tableName].push_back(pfi);
         }
     }
-
 }
 
 // Global CSV parser
@@ -462,7 +467,7 @@ string strip_quotes(string input)
     return input.substr(start, size);
 }
 
-
+/*
 int main()
 {
     DBSystem data;
@@ -470,15 +475,21 @@ int main()
     data.initMainMemory();
     data.populateDBInfo();
 
-    for(int i=0; i<45; i++)
+    for(int i=0; i<44; i++)
     {
-        cout << data.getRecord("countries", i);
+        data.getRecord("countries", i);
 
-        for(int j=0; j<4; j++)
-        {
-            cout << data.MainMemory[j].tablename << " " << data.MainMemory[j].start_index << " " << data.MainMemory[j].end_index << " " << data.MainMemory[j].LRU_age << endl;
-        }
+        // for(int j=0; j<4; j++)
+        // {
+        //     cout << data.MainMemory[j].tablename << " " << data.MainMemory[j].start_index << " " << data.MainMemory[j].end_index << " " << data.MainMemory[j].LRU_age << endl;
+        // }
     }
+    data.insertRecord("countries", "\"23534\",\"ZZ\",\"Shadow\",\"AJS\"");
+    data.insertRecord("countries", "\"23534\",\"ZZ\",\"Shadow2\",\"AJS\"");
+    
+    data.getRecord("countries", 45);
+    data.getRecord("countries", 44);
 
     return 0;
 }
+*/
