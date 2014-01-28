@@ -121,22 +121,14 @@ void DBSystem::readConfig(string pathToConfigFile)
         {
             string attr, data_type;
 
-            infile >> temp;
+            getline(infile, temp, ',');
             if(temp.compare("END") == 0)
             {
                 //break, as one table is complete
                 break;
             }
 
-            //remove last comma, if present
-            if(temp[temp.size() - 1] == ',')
-            {
-                attr = temp.substr(0, temp.size() - 1);
-            }
-            else
-            {
-                attr = temp;
-            }
+            attr = temp;
 
             infile >> data_type;
 
@@ -467,7 +459,6 @@ string strip_quotes(string input)
     return input.substr(start, size);
 }
 
-/*
 int main()
 {
     DBSystem data;
@@ -492,4 +483,3 @@ int main()
 
     return 0;
 }
-*/
