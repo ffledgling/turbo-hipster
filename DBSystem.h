@@ -15,6 +15,7 @@ using namespace std;
 typedef long long int LL;
 
 vector< vector<string> > ParseCSV(string csvFilePath);
+void append_to_file(string filename, string record);
 vector<string> tokenize(string line);
 string strip_quotes(string input);
 

@@ -277,6 +277,7 @@ string DBSystem::getRecord(string tableName, int recordId)
 
 void DBSystem::insertRecord(string tableName, string record)
 {
+    string table;
     //get pagefile count
     int pagefile_count = DiskMap[tableName].size();
 
@@ -307,6 +308,9 @@ void DBSystem::insertRecord(string tableName, string record)
         sprintf(intconversionptr,"%d", pagefile_count - 1);
         pfi.path = pagefilepath + tableName + "_PageFile_" + string(intconversionptr) + ".csv";
         MainMemory[pgno].write_page_file(pfi.path);
+        //write to original CSV file
+        table = path + tableName + ".csv";
+        append_to_file(table, record);
 
         LRU_timer++;
         MainMemory[pgno].LRU_age = LRU_timer;
@@ -331,8 +335,10 @@ void DBSystem::insertRecord(string tableName, string record)
             sprintf(intconversionptr,"%d", pagefile_count);
             // Damn you C++, just give me a to_string() already.
             pfi.path = pagefilepath + tableName + "_PageFile_" + string(intconversionptr) + ".csv";
-
             MainMemory[pgno].write_page_file(pfi.path);
+            //write to original CSV file
+            table = path + tableName + ".csv";
+            append_to_file(table, record);
 
             LRU_timer++;
             MainMemory[pgno].LRU_age = LRU_timer;
@@ -363,8 +369,10 @@ void DBSystem::insertRecord(string tableName, string record)
             sprintf(intconversionptr,"%d", pagefile_count);
             
             pfi.path = pagefilepath + tableName + "_PageFile_" + string(intconversionptr) + ".csv";
-
             MainMemory[pgno].write_page_file(pfi.path);
+            //write to original CSV file
+            table = path + tableName + ".csv";
+            append_to_file(table, record);
 
             LRU_timer++;
             MainMemory[pgno].LRU_age = LRU_timer;
@@ -372,6 +380,23 @@ void DBSystem::insertRecord(string tableName, string record)
             DiskMap[tableName].push_back(pfi);
         }
     }
+}
+
+//Append record to file
+void append_to_file(string filename, string record)
+{
+    ofstream outfile;
+    //read config file
+    outfile.open(filename.c_str(), ios::app);
+    //abort if config file can't be opened
+    if(!outfile.is_open())
+    {
+        perror("Error while opening file...\nAborting!!");
+        return;
+    }
+    outfile << record;
+    outfile << endl;
+    return;
 }
 
 // Global CSV parser
@@ -426,16 +451,16 @@ vector< vector<string> > ParseCSV(string csvFilePath)
 
 vector<string> tokenize(string line)
 {
-        vector<string>record;
-        string record_attr;
+    vector<string>record;
+    string record_attr;
 
-        stringstream ss(line);
+    stringstream ss(line);
 
-        // read string stream with ',' as delimiter
-        while(getline(ss, record_attr, ',')){
-            record.push_back(record_attr);
-        }
-        return record;
+    // read string stream with ',' as delimiter
+    while(getline(ss, record_attr, ',')){
+        record.push_back(record_attr);
+    }
+    return record;
 }
 
 string strip_quotes(string input)
