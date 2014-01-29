@@ -1,6 +1,7 @@
 #include "DBSystem.h"
 DBSystem::DBSystem()
 {
+    MainMemoryInited = false;
     LRU_timer = 0;
 
     // Create Dir for pagefiles
@@ -139,6 +140,10 @@ void DBSystem::readConfig(string pathToConfigFile)
     }
     infile.close();
 
+    // Init main memory here.
+    initMainMemory();
+
+
 }
 
 void DBSystem::populateDBInfo()
@@ -270,7 +275,9 @@ string DBSystem::getRecord(string tableName, int recordId)
         record.append(*v);
         record.append(",");
     }
-    *record.rbegin() = '\n';
+    // Do not send \n at the end of record.
+    //*record.rbegin() = '\n';
+    record = record.substr(0, record.size()-1);
 
     return record;
 }
@@ -482,6 +489,7 @@ string strip_quotes(string input)
     return input.substr(start, size);
 }
 
+/*
 int main()
 {
     DBSystem data;
@@ -506,3 +514,4 @@ int main()
 
     return 0;
 }
+*/

@@ -140,7 +140,11 @@ class Page
             int new_size = 0;
             for(int i=0; i<row.size(); i++)
                 new_size += row[i].size() + 1; // +1 for comma and for newline if its last record
+            // FIXME: Doing some ghapla here
+            // If record fits as is, it's k,
+            // if record -1 fits, then it's k too.
             if(size + new_size <= page_size)
+            //if(size + new_size <= page_size || size + new_size - 1 <= page_size)
             {
                 records.push_back(row);
                 end_index++;
@@ -158,6 +162,7 @@ class DBSystem
         int page_size;
         int num_pages;
         int LRU_timer;
+        bool MainMemoryInited;
         string path;
         string pagefilepath;
 
