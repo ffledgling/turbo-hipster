@@ -139,16 +139,8 @@ class Page
             int new_size = 0;
             for(int i=0; i<row.size(); i++)
                 new_size += row[i].size() + 1; // +1 for comma and for newline if its last record
-            new_size--; //dont count newline as of now, see if its possible to insert it.
             if(size + new_size <= page_size)
             {
-                //comment this part if dont want to deal with newline.
-                if(size + new_size < page_size) // check if there's space for a newline also
-                {
-                    new_size++;
-                }
-                //comment till here
-
                 records.push_back(row);
                 end_index++;
                 size += new_size;

@@ -242,8 +242,6 @@ void DBSystem::populateDBInfo()
     //              << "," << (*pfi_iter).end_record_id << endl;
     //     }
     // }
-
-    
 }
 
 string DBSystem::getRecord(string tableName, int recordId)
