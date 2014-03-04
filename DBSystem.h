@@ -215,6 +215,11 @@ class DBSystem
         void populateDBInfo();
         string getRecord(string tableName, int recordId);
         void insertRecord(string tableName, string record);
+
+        // MYSQL Functions
+        void selectCommand(string query);
+        void createCommand(string query);
+        void queryType(string query);
 };
 
 #endif

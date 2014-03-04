@@ -1,4 +1,6 @@
 #include "DBSystem.h"
+#include "Parser.cpp"
+
 DBSystem::DBSystem()
 {
     MainMemoryInited = false;
