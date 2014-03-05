@@ -1,8 +1,46 @@
+void toUpperCase(string s){
+
+    // Convert string(ascii) to UPPER CASE
+
+    for(string::iterator i=s.begin(); i!=s.end(); i++){
+        if(*i<123 && *i>96){
+            *i-=32;
+        }
+    }
+    return;
+}
+
+void toLowerCase(string s){
+    // Convert a string(ascii) to *lower case*
+
+    for(string::iterator i=s.begin(); i!=s.end(); i++){
+        if(*i<91 && *i>64){
+            *i+=32;
+        }
+    }
+    return;
+}
+
 void DBSystem::queryType(string query) {
     /*
      * Deteremine the type of the query (select/create) and
      * invoke appropriate method for it.
      * */
+    
+    string first_word = query.substr(0, query.find_first_of(' '));
+    toLowerCase(first_word);
+    cout << "first word is: "<< first_word <<"\n";
+    if(first_word == "select"){
+        selectCommand(query);
+        cout << "SELECT\n";
+    } else if(first_word == "create"){
+        createCommand(query);
+        cout << "CREATE\n";
+    } else {
+        cout << "Invalid Query. \"" << query << "\" is not a valid query\n";
+    }
+
+
 }
 void DBSystem::createCommand(string query) {
     /*

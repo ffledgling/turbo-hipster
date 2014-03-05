@@ -491,13 +491,16 @@ string strip_quotes(string input)
     return input.substr(start, size);
 }
 
-/*
 int main()
 {
     DBSystem data;
     data.readConfig("config.txt");
     data.initMainMemory();
     data.populateDBInfo();
+
+    data.queryType("select * from countries");
+    data.queryType("CREATE countries");
+    return 0;
 
     for(int i=0; i<44; i++)
     {
@@ -514,6 +517,6 @@ int main()
     data.getRecord("countries", 45);
     data.getRecord("countries", 44);
 
+
     return 0;
 }
-*/
