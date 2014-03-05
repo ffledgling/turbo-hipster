@@ -497,9 +497,10 @@ int main()
     data.readConfig("config.txt");
     data.initMainMemory();
     data.populateDBInfo();
-
+    
     data.queryType("select * from countries");
-    data.queryType("CREATE countries");
+    data.queryType("create table tablename (col1 varchar(255),col2 int)");
+    
     return 0;
 
     for(int i=0; i<44; i++)

@@ -26,20 +26,33 @@ void DBSystem::queryType(string query) {
      * Deteremine the type of the query (select/create) and
      * invoke appropriate method for it.
      * */
-    
-    string first_word = query.substr(0, query.find_first_of(' '));
-    toLowerCase(first_word);
-    cout << "first word is: "<< first_word <<"\n";
-    if(first_word == "select"){
-        selectCommand(query);
-        cout << "SELECT\n";
-    } else if(first_word == "create"){
-        createCommand(query);
-        cout << "CREATE\n";
-    } else {
-        cout << "Invalid Query. \"" << query << "\" is not a valid query\n";
-    }
 
+    ifstream myfile;
+    string line;
+    myfile.open("temp_file_to_parse");
+    getline(myfile, line);
+    cout<< line<<endl;
+    stringstream ss(line);
+    string word;
+    while(getline(ss, word, ' '));
+    cout << word;
+
+    if(word == "t_gsp_deleteStatement")
+        // call delete function
+    if(word == "t_gsp_updateStatement");
+        // call delete function
+    if(word == "t_gsp_insertStatement");
+    if(word == "t_gsp_selectStatement");
+
+    //while(true){
+    //    //myfile >> line;
+    //    getline(myfile, line);
+    //    if(myfile.eof()) break;
+    //    cout << "Output by me - " << line << endl;
+    //}
+
+    cout << "query end\n\n";
+    return;
 
 }
 void DBSystem::createCommand(string query) {
